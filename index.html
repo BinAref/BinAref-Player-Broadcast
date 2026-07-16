@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BinAref — لوحة بث الكروت</title>
+<style>
+  :root{
+    --bg:#0D0D1A; --surface:#13132A; --card:#1A1A35; --panel:#16162E;
+    --accent:#E94560; --accent2:#FF6B8A; --teal:#00C9A7;
+    --text:#EEEEF5; --dim:#8A8AA8; --muted:#44445A; --border:#252545;
+    --ok:#2ecc71; --bad:#E94560;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:linear-gradient(135deg,#0D0D1A,#141428);color:var(--text);
+    font-family:"Segoe UI",Tahoma,system-ui,sans-serif;font-size:14px}
+  a{color:var(--teal)}
+  .wrap{max-width:1200px;margin:0 auto;padding:16px}
+  header{display:flex;align-items:center;gap:12px;padding:14px 4px 18px}
+  header .logo{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));font-size:20px}
+  header h1{font-size:17px;font-weight:800}
+  header .sub{color:var(--dim);font-size:12px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);display:inline-block;margin-inline-start:6px}
+  .dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+  .dot.off{background:var(--bad)}
+  .btn{cursor:pointer;border:none;border-radius:10px;padding:9px 16px;font-size:13px;
+    font-weight:700;color:#fff;background:var(--card);border:1px solid var(--border)}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none}
+  .btn.ghost{background:transparent}
+  .btn.sm{padding:6px 11px;font-size:12px;border-radius:8px}
+  .btn.danger{color:var(--accent);border-color:rgba(233,69,96,.4)}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
+  .panel h2{font-size:13px;color:var(--dim);font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+  label{display:block;font-size:12px;color:var(--dim);margin:10px 0 5px}
+  input,textarea,select{width:100%;background:var(--surface);border:1px solid var(--border);
+    border-radius:9px;color:var(--text);padding:9px 11px;font-size:13px;font-family:inherit}
+  input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+  textarea.code{min-height:280px;font-family:"Cascadia Code",Consolas,monospace;font-size:12.5px;
+    line-height:1.5;direction:ltr;text-align:left;resize:vertical;white-space:pre}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .row>div{flex:1;min-width:90px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .chip{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);
+    border-radius:20px;padding:6px 12px;cursor:pointer;font-size:12.5px;user-select:none}
+  .chip input{width:auto}
+  .chip.on{border-color:var(--accent);color:var(--accent);background:rgba(233,69,96,.12)}
+  .previewStage{background:
+      radial-gradient(120% 120% at 50% 0,#243b2e 0,#0b0b12 70%);
+    border:1px solid var(--border);border-radius:14px;padding:20px;min-height:260px;
+    display:flex;align-items:flex-start;justify-content:center;overflow:auto}
+  .previewStage iframe{border:0;background:transparent;box-shadow:0 12px 40px rgba(0,0,0,.5);border-radius:4px}
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+  .toast{position:fixed;bottom:20px;inset-inline-start:50%;transform:translateX(50%);
+    background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 18px;
+    font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:.25s;pointer-events:none;z-index:50;max-width:90vw}
+  .toast.show{opacity:1}
+  .toast.ok{border-color:var(--ok)} .toast.err{border-color:var(--bad)}
+  .warn{background:rgba(233,69,96,.08);border:1px solid rgba(233,69,96,.3);border-radius:10px;
+    padding:10px 12px;font-size:12px;color:#ffd0d8;line-height:1.6;margin-top:10px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:start;padding:9px 8px;border-bottom:1px solid var(--border)}
+  th{color:var(--dim);font-weight:600;font-size:11.5px}
+  .badge{font-size:11px;padding:2px 8px;border-radius:12px;font-weight:700}
+  .badge.on{background:rgba(46,204,113,.15);color:var(--ok)}
+  .badge.off{background:rgba(136,136,160,.15);color:var(--dim)}
+  .muted{color:var(--muted)}
+  details summary{cursor:pointer;color:var(--dim);font-size:12.5px;padding:6px 0}
+  .keyRow{display:flex;gap:8px;align-items:flex-end}
+  .keyRow>div{flex:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">📣</div>
+    <div style="flex:1">
+      <h1>لوحة بث الكروت — BinAref Player</h1>
+      <div class="sub">اكتب الكرت، عاينه، ثم انشره إلى Supabase — يصل لكل من يفتح فيديو وهو متصل.
+        <span id="conn"><span class="dot" id="dot"></span><span id="connTxt">غير متصل</span></span>
+      </div>
+    </div>
+    <button class="btn ghost sm" onclick="toggleSettings()">⚙️ الإعدادات</button>
+  </header>
+
+  <!-- Connection settings -->
+  <div class="panel" id="settings" style="display:none">
+    <h2>الاتصال بـ Supabase</h2>
+    <label>رابط المشروع (Project URL)</label>
+    <input id="sbUrl" placeholder="https://xxxx.supabase.co">
+    <div class="keyRow" style="margin-top:4px">
+      <div>
+        <label>مفتاح service_role (سرّي — للكتابة/النشر)</label>
+        <input id="sbKey" type="password" placeholder="eyJ… (service_role key)">
+      </div>
+      <button class="btn primary" onclick="saveConfig()">حفظ</button>
+      <button class="btn sm" onclick="clearKey()">مسح المفتاح</button>
+    </div>
+    <div class="warn">
+      ⚠️ مفتاح <b>service_role</b> يمنح صلاحية كاملة على قاعدتك ويتجاوز الحماية.
+      يُحفظ في متصفحك فقط (localStorage) ولا يُرسل لأي مكان سوى Supabase.
+      <b>لا تضعه في أي ملف عام ولا تُدخِله والموقع عام على الإنترنت</b> — استعمل اللوحة محلياً.
+      تجده في: Supabase → Project Settings → API → <code>service_role</code>.
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Editor -->
+    <div>
+      <div class="panel">
+        <h2>محرّر الكرت</h2>
+        <label>المعرّف (id) — فريد. تغييره = كرت جديد لكل الأجهزة</label>
+        <input id="f_id" placeholder="مثال: update-1-3-0">
+
+        <label>كود الكرت (HTML / CSS / JS)</label>
+        <textarea id="f_html" class="code" spellcheck="false"></textarea>
+        <div class="hint">اجعل خلفية الصفحة شفافة ليظهر شكل الكرت فقط. للتحكم بالتطبيق:
+          <code>BinAref.close()</code> لإغلاق الكرت، <code>BinAref.open('https://…')</code> لفتح رابط.</div>
+
+        <div class="row" style="margin-top:12px">
+          <div><label>العرض (px)</label><input id="f_w" type="number" value="380"></div>
+          <div><label>الارتفاع (px)</label><input id="f_h" type="number" value="150"></div>
+          <div><label>المدة (ثانية)</label><input id="f_secs" type="number" value="10"></div>
+        </div>
+
+        <label>المنصات (فارغ = الجميع)</label>
+        <div class="chips" id="platforms">
+          <label class="chip"><input type="checkbox" value="android">Android</label>
+          <label class="chip"><input type="checkbox" value="windows">Windows</label>
+          <label class="chip"><input type="checkbox" value="linux">Linux</label>
+          <label class="chip"><input type="checkbox" value="macos">macOS</label>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label class="chip" style="display:inline-flex"><input id="f_dismiss" type="checkbox" checked> قابل للإغلاق (زر ✕)</label>
+          </div>
+          <div>
+            <label class="chip" style="display:inline-flex"><input id="f_active" type="checkbox" checked> نشِط (active)</label>
+          </div>
+        </div>
+
+        <details style="margin-top:12px">
+          <summary>حقول متقدمة (اختيارية)</summary>
+          <div class="row" style="margin-top:8px">
+            <div><label>أدنى إصدار</label><input id="f_min" placeholder="1.3.0"></div>
+            <div><label>أعلى إصدار</label><input id="f_max" placeholder=""></div>
+          </div>
+          <div class="row">
+            <div><label>نص الزر (fallback)</label><input id="f_blabel" placeholder="حمّل الآن"></div>
+            <div><label>رابط الزر</label><input id="f_burl" placeholder="https://…"></div>
+          </div>
+          <div class="hint">تُستعمل حقول fallback (نص/زر) فقط لو تعذّر عرض HTML على جهاز قديم.</div>
+        </details>
+
+        <div class="row" style="margin-top:16px">
+          <button class="btn primary" style="flex:2" onclick="publish()">🚀 نشر / إرسال</button>
+          <button class="btn" onclick="renderPreview()">👁️ عرض</button>
+          <button class="btn sm" onclick="copyJson()">نسخ JSON</button>
+          <button class="btn sm ghost" onclick="clearForm()">جديد</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview + list -->
+    <div>
+      <div class="panel">
+        <h2>معاينة حيّة <span class="muted" id="sizeLabel"></span></h2>
+        <div class="previewStage"><iframe id="preview"></iframe></div>
+        <div class="hint">المعاينة تعرض الكرت بالحجم الفعلي فوق خلفية داكنة تحاكي الفيديو.</div>
+      </div>
+
+      <div class="panel">
+        <h2>الكروت الحالية <button class="btn sm ghost" style="float:inline-start" onclick="fetchCards()">↻ تحديث</button></h2>
+        <table>
+          <thead><tr><th>المعرّف</th><th>الحالة</th><th>الحجم</th><th></th></tr></thead>
+          <tbody id="cardsBody"><tr><td colspan="4" class="muted">— احفظ الاتصال ثم اضغط تحديث —</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_URL = "https://ijgqmjgllwtcjziyrgvc.supabase.co";
+const TABLE = "broadcasts";
+const STARTER = `<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;background:transparent;overflow:hidden;
+    font-family:"Segoe UI",system-ui,sans-serif}
+  .card{width:100%;height:100%;display:flex;align-items:center;gap:14px;
+    padding:16px 18px;border-radius:18px;color:#EEEEF5;
+    background:linear-gradient(135deg,#1b2036,#121228);
+    border:1px solid rgba(233,69,96,.45);
+    box-shadow:0 10px 28px rgba(0,0,0,.45)}
+  .badge{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+    font-size:26px;background:linear-gradient(135deg,#E94560,#FF6B8A)}
+  .t{font-size:15px;font-weight:800}
+  .s{margin-top:4px;font-size:12.5px;color:#AEB0C7}
+  .b{margin-top:9px;display:inline-block;cursor:pointer;padding:6px 14px;
+    border-radius:20px;font-size:12px;font-weight:700;color:#fff;border:none;
+    background:linear-gradient(135deg,#E94560,#FF6B8A)}
+</style></head><body>
+  <div class="card">
+    <div class="badge">🎬</div>
+    <div>
+      <div class="t">عنوان الإعلان</div>
+      <div class="s">نص قصير هنا…</div>
+      <button class="b" onclick="BinAref.open('https://github.com/BinAref/BinAref-Releases')">حمّل الآن</button>
+    </div>
+  </div>
+</body></html>`;
+
+const $ = id => document.getElementById(id);
+let cfg = { url: "", key: "" };
+
+function loadConfig(){
+  cfg.url = localStorage.getItem("sb_url") || DEFAULT_URL;
+  cfg.key = localStorage.getItem("sb_key") || "";
+  $("sbUrl").value = cfg.url;
+  $("sbKey").value = cfg.key;
+  updateConn();
+}
+function saveConfig(){
+  cfg.url = $("sbUrl").value.trim().replace(/\/$/,"");
+  cfg.key = $("sbKey").value.trim();
+  localStorage.setItem("sb_url", cfg.url);
+  localStorage.setItem("sb_key", cfg.key);
+  updateConn();
+  toast("تم حفظ الاتصال", "ok");
+  if(cfg.key) fetchCards();
+}
+function clearKey(){ localStorage.removeItem("sb_key"); cfg.key=""; $("sbKey").value=""; updateConn(); toast("مُسح المفتاح"); }
+function updateConn(){
+  const ok = cfg.url && cfg.key;
+  $("dot").className = "dot " + (ok ? "on" : "off");
+  $("connTxt").textContent = ok ? "متصل" : "غير متصل";
+}
+function toggleSettings(){ const s=$("settings"); s.style.display = s.style.display==="none" ? "block":"none"; }
+
+function headers(write){
+  const h = { "apikey": cfg.key, "Authorization": "Bearer "+cfg.key };
+  if(write){ h["Content-Type"]="application/json"; h["Prefer"]="resolution=merge-duplicates,return=representation"; }
+  return h;
+}
+
+// ── Preview ────────────────────────────────────────────────────────────────
+function bridge(html){
+  const b = `<scr`+`ipt>window.BinAref={close:function(){parent.postMessage({t:'close'},'*')},`+
+            `open:function(u){parent.postMessage({t:'open',u:u},'*')}};</scr`+`ipt>`;
+  if(html.includes("</head>")) return html.replace("</head>", b+"</head>");
+  if(/<body[^>]*>/.test(html)) return html.replace(/(<body[^>]*>)/, "$1"+b);
+  return b+html;
+}
+function renderPreview(){
+  const w = +$("f_w").value||380, h=+$("f_h").value||150;
+  const f = $("preview"); f.style.width=w+"px"; f.style.height=h+"px";
+  f.srcdoc = bridge($("f_html").value);
+  $("sizeLabel").textContent = `— ${w}×${h}`;
+}
+window.addEventListener("message", e=>{
+  if(e.data && e.data.t==="close") toast("استُدعيت BinAref.close() — سيُغلق الكرت في التطبيق");
+  if(e.data && e.data.t==="open") toast("BinAref.open: "+e.data.u, "ok");
+});
+
+// ── Build a row from the form ──────────────────────────────────────────────
+function platforms(){ return [...document.querySelectorAll("#platforms input:checked")].map(c=>c.value); }
+function buildRow(){
+  const id = $("f_id").value.trim();
+  const html = $("f_html").value;
+  if(!id){ toast("أدخل المعرّف (id)", "err"); return null; }
+  if(!html.trim()){ toast("أدخل كود الكرت", "err"); return null; }
+  const row = {
+    id, html,
+    width:+$("f_w").value||380, height:+$("f_h").value||150,
+    show_seconds:+$("f_secs").value||10,
+    dismissible: $("f_dismiss").checked,
+    platforms: platforms(),
+    active: $("f_active").checked,
+    min_version: $("f_min").value.trim()||null,
+    max_version: $("f_max").value.trim()||null,
+  };
+  const bl=$("f_blabel").value.trim(), bu=$("f_burl").value.trim();
+  row.button = (bl||bu) ? {label:bl, url:bu} : null;
+  return row;
+}
+
+// ── Publish (upsert) ───────────────────────────────────────────────────────
+async function publish(){
+  if(!cfg.key){ toast("احفظ مفتاح service_role أولاً (الإعدادات)", "err"); toggleSettings(); return; }
+  const row = buildRow(); if(!row) return;
+  try{
+    const r = await fetch(`${cfg.url}/rest/v1/${TABLE}`, {
+      method:"POST", headers:headers(true), body:JSON.stringify([row]) });
+    if(!r.ok){ throw new Error(await r.text()); }
+    toast("✅ نُشر الكرت «"+row.id+"» بنجاح", "ok");
+    fetchCards();
+  }catch(e){ toast("فشل النشر: "+trim(e.message), "err"); }
+}
+
+function copyJson(){
+  const row = buildRow(); if(!row) return;
+  navigator.clipboard.writeText(JSON.stringify(row,null,2));
+  toast("نُسخ JSON للكرت", "ok");
+}
+
+// ── Existing cards ─────────────────────────────────────────────────────────
+async function fetchCards(){
+  if(!cfg.key){ return; }
+  try{
+    const r = await fetch(`${cfg.url}/rest/v1/${TABLE}?select=*&order=created_at.desc`, {headers:headers(false)});
+    if(!r.ok) throw new Error(await r.text());
+    renderCards(await r.json());
+  }catch(e){ toast("تعذّر جلب الكروت: "+trim(e.message), "err"); }
+}
+function renderCards(rows){
+  const b=$("cardsBody");
+  if(!rows.length){ b.innerHTML=`<tr><td colspan="4" class="muted">لا توجد كروت بعد</td></tr>`; return; }
+  b.innerHTML = rows.map(c=>`<tr>
+    <td>${esc(c.id)}</td>
+    <td><span class="badge ${c.active?'on':'off'}">${c.active?'نشِط':'موقوف'}</span></td>
+    <td class="muted">${c.width}×${c.height}</td>
+    <td style="text-align:end;white-space:nowrap">
+      <button class="btn sm ghost" onclick='loadCard(${JSON.stringify(c).replace(/'/g,"&#39;")})'>تحميل</button>
+      <button class="btn sm" onclick="toggleActive('${esc(c.id)}',${!c.active})">${c.active?'إيقاف':'تشغيل'}</button>
+      <button class="btn sm danger" onclick="del('${esc(c.id)}')">حذف</button>
+    </td></tr>`).join("");
+}
+function loadCard(c){
+  $("f_id").value=c.id; $("f_html").value=c.html||""; $("f_w").value=c.width;
+  $("f_h").value=c.height; $("f_secs").value=c.show_seconds; $("f_dismiss").checked=!!c.dismissible;
+  $("f_active").checked=!!c.active; $("f_min").value=c.min_version||""; $("f_max").value=c.max_version||"";
+  $("f_blabel").value=c.button?.label||""; $("f_burl").value=c.button?.url||"";
+  const set=(c.platforms||[]); document.querySelectorAll("#platforms input").forEach(i=>i.checked=set.includes(i.value));
+  syncChips(); renderPreview(); window.scrollTo({top:0,behavior:"smooth"});
+}
+async function toggleActive(id, active){
+  try{
+    const r=await fetch(`${cfg.url}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(id)}`,
+      {method:"PATCH", headers:headers(true), body:JSON.stringify({active})});
+    if(!r.ok) throw new Error(await r.text());
+    toast(active?"شُغّل":"أُوقف", "ok"); fetchCards();
+  }catch(e){ toast("فشل: "+trim(e.message),"err"); }
+}
+async function del(id){
+  if(!confirm("حذف الكرت «"+id+"» نهائياً؟")) return;
+  try{
+    const r=await fetch(`${cfg.url}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(id)}`,
+      {method:"DELETE", headers:headers(false)});
+    if(!r.ok) throw new Error(await r.text());
+    toast("حُذف", "ok"); fetchCards();
+  }catch(e){ toast("فشل الحذف: "+trim(e.message),"err"); }
+}
+
+// ── helpers ────────────────────────────────────────────────────────────────
+function clearForm(){
+  ["f_id","f_min","f_max","f_blabel","f_burl"].forEach(i=>$(i).value="");
+  $("f_html").value=STARTER; $("f_w").value=380; $("f_h").value=150; $("f_secs").value=10;
+  $("f_dismiss").checked=true; $("f_active").checked=true;
+  document.querySelectorAll("#platforms input").forEach(i=>i.checked=false);
+  syncChips(); renderPreview();
+}
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function trim(s){ return String(s).slice(0,180); }
+let toastT;
+function toast(msg,kind){ const t=$("toast"); t.textContent=msg; t.className="toast show "+(kind||"");
+  clearTimeout(toastT); toastT=setTimeout(()=>t.className="toast",3200); }
+function syncChips(){ document.querySelectorAll("#platforms .chip").forEach(ch=>{
+  const i=ch.querySelector("input"); ch.classList.toggle("on", i.checked); }); }
+
+document.querySelectorAll("#platforms .chip").forEach(ch=>ch.addEventListener("change",syncChips));
+$("f_html").addEventListener("input", ()=>{ clearTimeout(window._pv); window._pv=setTimeout(renderPreview,400); });
+["f_w","f_h"].forEach(id=>$(id).addEventListener("input",renderPreview));
+
+// init
+loadConfig();
+$("f_html").value = STARTER;
+syncChips();
+renderPreview();
+if(cfg.key) fetchCards();
+</script>
+</body>
+</html>
