@@ -14,182 +14,176 @@
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
   body{background:linear-gradient(135deg,#0D0D1A,#141428);color:var(--text);
-    font-family:"Segoe UI",Tahoma,system-ui,sans-serif;font-size:14px}
+    font-family:"Segoe UI",Tahoma,system-ui,sans-serif;font-size:14px;overflow:hidden}
   a{color:var(--teal)}
-  .wrap{max-width:1200px;margin:0 auto;padding:16px}
-  header{display:flex;align-items:center;gap:12px;padding:14px 4px 18px}
-  header .logo{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
-    background:linear-gradient(135deg,var(--accent),var(--accent2));font-size:20px}
-  header h1{font-size:17px;font-weight:800}
-  header .sub{color:var(--dim);font-size:12px}
+  .app{height:100vh;max-width:1240px;margin:0 auto;padding:12px 16px;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;gap:12px;padding-bottom:12px;position:relative;flex:0 0 auto}
+  header .logo{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));font-size:18px}
+  header h1{font-size:16px;font-weight:800}
+  header .sub{color:var(--dim);font-size:11.5px}
   .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);display:inline-block;margin-inline-start:6px}
-  .dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
-  .dot.off{background:var(--bad)}
-  .btn{cursor:pointer;border:none;border-radius:10px;padding:9px 16px;font-size:13px;
-    font-weight:700;color:#fff;background:var(--card);border:1px solid var(--border)}
+  .dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)} .dot.off{background:var(--bad)}
+  .btn{cursor:pointer;border-radius:9px;padding:8px 15px;font-size:13px;font-weight:700;
+    color:#fff;background:var(--card);border:1px solid var(--border)}
   .btn:hover{border-color:var(--accent)}
   .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none}
   .btn.ghost{background:transparent}
-  .btn.sm{padding:6px 11px;font-size:12px;border-radius:8px}
+  .btn.sm{padding:5px 10px;font-size:11.5px;border-radius:7px}
   .btn.danger{color:var(--accent);border-color:rgba(233,69,96,.4)}
-  .panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
-  .panel h2{font-size:13px;color:var(--dim);font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
-  label{display:block;font-size:12px;color:var(--dim);margin:10px 0 5px}
-  input{width:100%;background:var(--surface);border:1px solid var(--border);
-    border-radius:9px;color:var(--text);padding:9px 11px;font-size:13px;font-family:inherit}
+  input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;
+    color:var(--text);padding:8px 11px;font-size:13px;font-family:inherit}
   input:focus{outline:none;border-color:var(--accent)}
-  textarea.code{width:100%;min-height:300px;background:var(--surface);border:1px solid var(--border);
-    border-radius:0 0 10px 10px;border-top:none;color:var(--text);padding:11px;
-    font-family:"Cascadia Code",Consolas,monospace;font-size:12.5px;line-height:1.55;
-    direction:ltr;text-align:left;resize:vertical;white-space:pre;tab-size:2}
-  textarea.code:focus{outline:none;border-color:var(--accent)}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-  @media(max-width:900px){.grid{grid-template-columns:1fr}}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-  .chip{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);
-    border-radius:20px;padding:6px 12px;cursor:pointer;font-size:12.5px;user-select:none}
-  .chip input{width:auto}
-  .chip.on{border-color:var(--accent);color:var(--accent);background:rgba(233,69,96,.12)}
-  /* tabs */
-  .tabs{display:flex;gap:2px}
-  .tab{cursor:pointer;padding:9px 18px;font-size:12.5px;font-weight:700;color:var(--dim);
-    background:var(--card);border:1px solid var(--border);border-bottom:none;
-    border-radius:10px 10px 0 0}
+  label{display:block;font-size:11.5px;color:var(--dim);margin:0 0 4px}
+  /* shell */
+  .main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+  .col{min-height:0;background:var(--panel);border:1px solid var(--border);border-radius:16px;
+    padding:14px;display:flex;flex-direction:column}
+  /* editor */
+  .tabs{display:flex;gap:2px;margin-top:10px}
+  .tab{cursor:pointer;padding:8px 18px;font-size:12.5px;font-weight:700;color:var(--dim);
+    background:var(--card);border:1px solid var(--border);border-bottom:none;border-radius:9px 9px 0 0}
   .tab.on{color:var(--accent);background:var(--surface);border-color:var(--accent);position:relative;z-index:1}
-  .tab .badge{font-size:10px;color:var(--muted);margin-inline-start:4px}
-  .editorArea{position:relative;margin-top:-1px}
-  .previewStage{background:radial-gradient(120% 120% at 50% 0,#243b2e 0,#0b0b12 70%);
-    border:1px solid var(--border);border-radius:14px;padding:20px;min-height:220px;
+  .edwrap{flex:1 1 auto;min-height:0;display:flex;margin-top:-1px}
+  textarea.code{flex:1;min-height:0;width:100%;background:var(--surface);border:1px solid var(--border);
+    border-radius:0 8px 8px 8px;color:var(--text);padding:11px;resize:none;
+    font-family:"Cascadia Code",Consolas,monospace;font-size:12.5px;line-height:1.55;
+    direction:ltr;text-align:left;white-space:pre;overflow:auto;tab-size:2}
+  textarea.code:focus{outline:none;border-color:var(--accent)}
+  .metaHint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+  code{background:var(--surface);padding:1px 6px;border-radius:5px;color:var(--teal);direction:ltr;display:inline-block}
+  .barRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .sep{width:1px;height:22px;background:var(--border)}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);
+    border-radius:18px;padding:5px 11px;cursor:pointer;font-size:12px;user-select:none}
+  .chip input{width:auto} .chip.on{border-color:var(--accent);color:var(--accent);background:rgba(233,69,96,.12)}
+  .iconThumb{width:38px;height:38px;border-radius:9px;border:1px solid var(--border);object-fit:cover;background:var(--surface)}
+  .actions{display:flex;gap:10px;align-items:center;margin-top:12px}
+  /* preview col */
+  .previewStage{flex:1 1 auto;min-height:0;margin-top:10px;
+    background:radial-gradient(120% 120% at 50% 0,#243b2e 0,#0b0b12 70%);
+    border:1px solid var(--border);border-radius:14px;padding:18px;
     display:flex;align-items:flex-start;justify-content:center;overflow:auto}
   .previewStage iframe{border:0;background:transparent;box-shadow:0 12px 40px rgba(0,0,0,.5);border-radius:4px}
-  .hint{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.6}
-  code{background:var(--surface);padding:1px 6px;border-radius:5px;color:var(--teal);direction:ltr;display:inline-block}
-  .toast{position:fixed;bottom:20px;inset-inline-start:50%;transform:translateX(50%);
-    background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 18px;
-    font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:.25s;pointer-events:none;z-index:50;max-width:90vw}
-  .toast.show{opacity:1}
-  .toast.ok{border-color:var(--ok)} .toast.err{border-color:var(--bad)}
-  .warn{background:rgba(233,69,96,.08);border:1px solid rgba(233,69,96,.3);border-radius:10px;
-    padding:10px 12px;font-size:12px;color:#ffd0d8;line-height:1.6;margin-top:10px}
-  table{width:100%;border-collapse:collapse;font-size:12.5px}
-  th,td{text-align:start;padding:9px 8px;border-bottom:1px solid var(--border)}
-  th{color:var(--dim);font-weight:600;font-size:11.5px}
-  .badge2{font-size:11px;padding:2px 8px;border-radius:12px;font-weight:700}
-  .badge2.on{background:rgba(46,204,113,.15);color:var(--ok)}
-  .badge2.off{background:rgba(136,136,160,.15);color:var(--dim)}
-  .muted{color:var(--muted)}
-  .keyRow{display:flex;gap:8px;align-items:flex-end}
-  .keyRow>div{flex:1}
-  .iconBox{display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap}
-  .iconThumb{width:46px;height:46px;border-radius:10px;border:1px solid var(--border);
-    object-fit:cover;background:var(--surface)}
+  .colHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .colHead h2{font-size:12.5px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
   .sizeInfo{font-size:12px;color:var(--teal);font-weight:700}
+  /* dropdown */
+  .dd{position:relative}
+  .ddBtn{cursor:pointer;background:var(--card);border:1px solid var(--border);border-radius:9px;
+    color:var(--text);padding:7px 13px;font-size:12.5px;font-weight:700}
+  .ddBtn:hover{border-color:var(--accent)}
+  .ddPanel{position:absolute;inset-inline-start:0;top:calc(100% + 6px);width:320px;max-width:80vw;z-index:20;
+    background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:6px;
+    box-shadow:0 16px 40px rgba(0,0,0,.55);max-height:250px;overflow-y:auto}
+  .ddRow{display:flex;align-items:center;gap:6px;padding:6px;border-radius:8px}
+  .ddRow:hover{background:var(--surface)}
+  .ddMain{flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:0}
+  .ddId{font-size:12.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ddEmpty{padding:14px;text-align:center;color:var(--muted);font-size:12.5px}
+  .badge2{font-size:10.5px;padding:2px 7px;border-radius:11px;font-weight:700;flex:0 0 auto}
+  .badge2.on{background:rgba(46,204,113,.15);color:var(--ok)} .badge2.off{background:rgba(136,136,160,.15);color:var(--dim)}
+  .muted{color:var(--muted)}
+  /* settings popup */
+  .pop{position:absolute;top:calc(100% + 6px);inset-inline-end:0;width:420px;max-width:88vw;z-index:30;
+    background:var(--card);border:1px solid var(--accent);border-radius:14px;padding:16px;
+    box-shadow:0 20px 50px rgba(0,0,0,.6)}
+  .keyRow{display:flex;gap:8px;align-items:flex-end;margin-top:4px} .keyRow>div{flex:1}
+  .warn{background:rgba(233,69,96,.08);border:1px solid rgba(233,69,96,.3);border-radius:10px;
+    padding:9px 11px;font-size:11.5px;color:#ffd0d8;line-height:1.6;margin-top:10px}
+  .toast{position:fixed;bottom:18px;inset-inline-start:50%;transform:translateX(50%);
+    background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 18px;font-size:13px;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:.25s;pointer-events:none;z-index:60;max-width:90vw}
+  .toast.show{opacity:1} .toast.ok{border-color:var(--ok)} .toast.err{border-color:var(--bad)}
+  @media(max-width:900px){ body{overflow:auto} .app{height:auto} .main{grid-template-columns:1fr} .previewStage{min-height:220px} }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app">
   <header>
     <div class="logo">📣</div>
     <div style="flex:1">
       <h1>لوحة بث الكروت — BinAref Player</h1>
-      <div class="sub">اكتب HTML/CSS/JS في التبويبات، عاين، ثم انشر إلى Supabase.
-        <span id="conn"><span class="dot" id="dot"></span><span id="connTxt">غير متصل</span></span>
+      <div class="sub">اكتب HTML/CSS/JS، عاين مباشرة، ثم انشر.
+        <span><span class="dot" id="dot"></span><span id="connTxt">غير متصل</span></span>
       </div>
     </div>
-    <button class="btn ghost sm" onclick="toggleSettings()">⚙️ الإعدادات</button>
+    <div style="position:relative">
+      <button class="btn ghost sm" onclick="togglePop()">⚙️ الإعدادات</button>
+      <div class="pop" id="settings" style="display:none">
+        <label>رابط المشروع (Project URL)</label>
+        <input id="sbUrl" placeholder="https://xxxx.supabase.co">
+        <div class="keyRow">
+          <div>
+            <label>مفتاح service_role (سرّي — للنشر)</label>
+            <input id="sbKey" type="password" placeholder="eyJ… (service_role key)">
+          </div>
+          <button class="btn primary" onclick="saveConfig()">حفظ</button>
+          <button class="btn sm" onclick="clearKey()">مسح</button>
+        </div>
+        <div class="warn">⚠️ مفتاح <b>service_role</b> يمنح صلاحية كاملة. يُحفظ في متصفحك فقط.
+          لا تُدخِله والموقع عام على الإنترنت — استعمل اللوحة محلياً.
+          تجده في Supabase → Project Settings → API → <code>service_role</code>.</div>
+      </div>
+    </div>
   </header>
 
-  <div class="panel" id="settings" style="display:none">
-    <h2>الاتصال بـ Supabase</h2>
-    <label>رابط المشروع (Project URL)</label>
-    <input id="sbUrl" placeholder="https://xxxx.supabase.co">
-    <div class="keyRow" style="margin-top:4px">
-      <div>
-        <label>مفتاح service_role (سرّي — للنشر)</label>
-        <input id="sbKey" type="password" placeholder="eyJ… (service_role key)">
-      </div>
-      <button class="btn primary" onclick="saveConfig()">حفظ</button>
-      <button class="btn sm" onclick="clearKey()">مسح المفتاح</button>
-    </div>
-    <div class="warn">
-      ⚠️ مفتاح <b>service_role</b> يمنح صلاحية كاملة على قاعدتك. يُحفظ في متصفحك فقط (localStorage).
-      <b>لا تضعه في ملف عام ولا تُدخِله والموقع عام على الإنترنت</b> — استعمل اللوحة محلياً.
-      تجده في: Supabase → Project Settings → API → <code>service_role</code>.
-    </div>
-  </div>
-
-  <div class="grid">
+  <div class="main">
     <!-- Editor -->
-    <div>
-      <div class="panel">
-        <h2>محرّر الكرت</h2>
-        <label>المعرّف (id) — فريد. تغييره = كرت جديد لكل الأجهزة</label>
-        <input id="f_id" placeholder="مثال: update-1-3-0">
+    <div class="col">
+      <label>المعرّف (id) — فريد. تغييره = كرت جديد لكل الأجهزة</label>
+      <input id="f_id" placeholder="مثال: update-1-3-0">
+      <div class="tabs">
+        <div class="tab on" data-tab="html" onclick="switchTab('html')">HTML</div>
+        <div class="tab" data-tab="css" onclick="switchTab('css')">CSS</div>
+        <div class="tab" data-tab="js" onclick="switchTab('js')">JS</div>
+      </div>
+      <div class="edwrap">
+        <textarea id="ed_html" class="code" spellcheck="false"></textarea>
+        <textarea id="ed_css"  class="code" spellcheck="false" style="display:none"></textarea>
+        <textarea id="ed_js"   class="code" spellcheck="false" style="display:none"></textarea>
+      </div>
+      <div class="metaHint">الحجم والمدة من الكود (أول سطر CSS): <code>/* @card 380 x 150 | 10s */</code> ·
+        الأيقونة في الكود بـ <code>{{icon}}</code> · <code>BinAref.close()</code> · <code>BinAref.open(url)</code></div>
 
-        <label style="margin-top:14px">الكود</label>
-        <div class="tabs">
-          <div class="tab on" data-tab="html" onclick="switchTab('html')">HTML</div>
-          <div class="tab" data-tab="css" onclick="switchTab('css')">CSS</div>
-          <div class="tab" data-tab="js" onclick="switchTab('js')">JS</div>
-        </div>
-        <div class="editorArea">
-          <textarea id="ed_html" class="code" spellcheck="false"></textarea>
-          <textarea id="ed_css"  class="code" spellcheck="false" style="display:none"></textarea>
-          <textarea id="ed_js"   class="code" spellcheck="false" style="display:none"></textarea>
-        </div>
-        <div class="hint">
-          الحجم والمدة من داخل الكود — أول سطر في CSS:
-          <code>/* @card 380 x 150 | 10s */</code><br>
-          خلفية الصفحة شفافة ليظهر شكل الكرت فقط. للتحكم بالتطبيق:
-          <code>BinAref.close()</code> و <code>BinAref.open('https://…')</code>.
-        </div>
-
-        <label style="margin-top:14px">أيقونة / صورة (من الجهاز) — استعملها في الكود بـ <code>{{icon}}</code></label>
-        <div class="iconBox">
-          <img id="iconThumb" class="iconThumb" alt="" style="display:none">
-          <input type="file" id="iconFile" accept="image/*" style="display:none" onchange="onIcon(event)">
-          <button class="btn sm" onclick="document.getElementById('iconFile').click()">＋ أضف أيقونة</button>
-          <button class="btn sm ghost" id="iconClear" onclick="clearIcon()" style="display:none">إزالة</button>
-          <span class="muted" id="iconInfo">لم تُضف أيقونة</span>
-        </div>
-
-        <label style="margin-top:16px">المنصات (فارغ = الجميع)</label>
+      <div class="barRow">
+        <input type="file" id="iconFile" accept="image/*" style="display:none" onchange="onIcon(event)">
+        <button class="btn sm" onclick="document.getElementById('iconFile').click()">＋ أيقونة</button>
+        <img id="iconThumb" class="iconThumb" alt="" style="display:none">
+        <button class="btn sm ghost danger" id="iconClear" onclick="clearIcon()" style="display:none">إزالة</button>
+        <div class="sep"></div>
         <div class="chips" id="platforms">
           <label class="chip"><input type="checkbox" value="android">Android</label>
           <label class="chip"><input type="checkbox" value="windows">Windows</label>
           <label class="chip"><input type="checkbox" value="linux">Linux</label>
           <label class="chip"><input type="checkbox" value="macos">macOS</label>
         </div>
+      </div>
+      <div class="barRow">
+        <label class="chip"><input id="f_dismiss" type="checkbox" checked> قابل للإغلاق (زر ✕)</label>
+        <label class="chip"><input id="f_active" type="checkbox" checked> نشِط (active)</label>
+      </div>
 
-        <div class="row" style="margin-top:14px">
-          <label class="chip"><input id="f_dismiss" type="checkbox" checked> قابل للإغلاق (زر ✕)</label>
-          <label class="chip"><input id="f_active" type="checkbox" checked> نشِط (active)</label>
-        </div>
-
-        <div class="row" style="margin-top:16px">
-          <button class="btn primary" style="flex:2" onclick="publish()">🚀 نشر / إرسال</button>
-          <button class="btn" onclick="renderPreview()">👁️ عرض</button>
-          <button class="btn sm" onclick="copyJson()">نسخ JSON</button>
-          <button class="btn sm ghost" onclick="clearForm()">جديد</button>
-        </div>
+      <div class="actions">
+        <button class="btn primary" style="flex:1" onclick="publish()">🚀 نشر / إرسال</button>
+        <button class="btn ghost sm" onclick="clearForm()" title="ابدأ كرتاً فارغاً من القالب">قالب جديد</button>
       </div>
     </div>
 
-    <!-- Preview + list -->
-    <div>
-      <div class="panel">
+    <!-- Preview + cards -->
+    <div class="col">
+      <div class="colHead">
         <h2>معاينة حيّة <span class="sizeInfo" id="sizeLabel"></span></h2>
-        <div class="previewStage"><iframe id="preview"></iframe></div>
-        <div class="hint">تُعرض بالحجم والمدة المقروءَين من الكود، فوق خلفية تحاكي الفيديو.</div>
+        <div class="dd">
+          <button class="ddBtn" onclick="toggleDD()">الكروت الحالية <span id="ddCount" class="muted"></span> ▾</button>
+          <div class="ddPanel" id="ddPanel" style="display:none">
+            <div id="ddList"><div class="ddEmpty">— احفظ الاتصال (⚙️) —</div></div>
+          </div>
+        </div>
       </div>
-      <div class="panel">
-        <h2>الكروت الحالية <button class="btn sm ghost" style="float:inline-start" onclick="fetchCards()">↻ تحديث</button></h2>
-        <table>
-          <thead><tr><th>المعرّف</th><th>الحالة</th><th>الحجم</th><th></th></tr></thead>
-          <tbody id="cardsBody"><tr><td colspan="4" class="muted">— احفظ الاتصال ثم اضغط تحديث —</td></tr></tbody>
-        </table>
-      </div>
+      <div class="previewStage"><iframe id="preview"></iframe></div>
+      <div class="metaHint">انقر كرتاً من «الكروت الحالية» لنسخ كل بياناته إلى المحرّر وتعديله.</div>
     </div>
   </div>
 </div>
@@ -219,189 +213,129 @@ html,body { width:100%; height:100%; background:transparent; overflow:hidden;
 .card { width:100%; height:100%; display:flex; align-items:center; gap:14px;
   padding:16px 18px; border-radius:18px; color:#EEEEF5;
   background:linear-gradient(135deg,#1b2036,#121228);
-  border:1px solid rgba(233,69,96,.45);
-  box-shadow:0 10px 28px rgba(0,0,0,.45); }
+  border:1px solid rgba(233,69,96,.45); box-shadow:0 10px 28px rgba(0,0,0,.45); }
 .icon { width:52px; height:52px; border-radius:14px; object-fit:cover; flex:0 0 auto; }
 .body { flex:1; min-width:0; }
 .title { font-size:15px; font-weight:800; }
 .text { margin-top:4px; font-size:12.5px; color:#AEB0C7; }
 .btn { margin-top:9px; padding:6px 14px; border-radius:20px; border:none; cursor:pointer;
   color:#fff; font-weight:700; background:linear-gradient(135deg,#E94560,#FF6B8A); }`,
-  js:
-`// اختياري: كود JavaScript للكرت`
+  js:`// اختياري: كود JavaScript للكرت`
 };
 
 const $ = id => document.getElementById(id);
-let cfg = { url:"", key:"" };
-let iconData = "";   // data URI of the added image (or "")
-let tab = "html";
+let cfg={url:"",key:""}, iconData="", tab="html", cardsCache=[];
 
-// ── config ──────────────────────────────────────────────────────────────────
-function loadConfig(){
-  cfg.url = localStorage.getItem("sb_url") || DEFAULT_URL;
-  cfg.key = localStorage.getItem("sb_key") || "";
-  $("sbUrl").value = cfg.url; $("sbKey").value = cfg.key; updateConn();
-}
-function saveConfig(){
-  cfg.url = $("sbUrl").value.trim().replace(/\/$/,""); cfg.key = $("sbKey").value.trim();
-  localStorage.setItem("sb_url", cfg.url); localStorage.setItem("sb_key", cfg.key);
-  updateConn(); toast("تم حفظ الاتصال","ok"); if(cfg.key) fetchCards();
-}
+function loadConfig(){ cfg.url=localStorage.getItem("sb_url")||DEFAULT_URL; cfg.key=localStorage.getItem("sb_key")||"";
+  $("sbUrl").value=cfg.url; $("sbKey").value=cfg.key; updateConn(); }
+function saveConfig(){ cfg.url=$("sbUrl").value.trim().replace(/\/$/,""); cfg.key=$("sbKey").value.trim();
+  localStorage.setItem("sb_url",cfg.url); localStorage.setItem("sb_key",cfg.key);
+  updateConn(); toast("تم حفظ الاتصال","ok"); togglePop(true); if(cfg.key) fetchCards(); }
 function clearKey(){ localStorage.removeItem("sb_key"); cfg.key=""; $("sbKey").value=""; updateConn(); toast("مُسح المفتاح"); }
 function updateConn(){ const ok=cfg.url&&cfg.key; $("dot").className="dot "+(ok?"on":"off"); $("connTxt").textContent=ok?"متصل":"غير متصل"; }
-function toggleSettings(){ const s=$("settings"); s.style.display=s.style.display==="none"?"block":"none"; }
-function headers(write){ const h={apikey:cfg.key,Authorization:"Bearer "+cfg.key};
-  if(write){h["Content-Type"]="application/json";h["Prefer"]="resolution=merge-duplicates,return=representation";} return h; }
+function togglePop(close){ const s=$("settings"); s.style.display=(close||s.style.display==="block")?"none":"block"; }
+function toggleDD(close){ const p=$("ddPanel"); p.style.display=(close||p.style.display==="block")?"none":"block"; }
+function headers(w){ const h={apikey:cfg.key,Authorization:"Bearer "+cfg.key};
+  if(w){h["Content-Type"]="application/json";h["Prefer"]="resolution=merge-duplicates,return=representation";} return h; }
 
-// ── tabs ────────────────────────────────────────────────────────────────────
-function switchTab(t){
-  tab=t;
-  document.querySelectorAll(".tab").forEach(el=>el.classList.toggle("on", el.dataset.tab===t));
-  ["html","css","js"].forEach(k=>$("ed_"+k).style.display = k===t ? "block":"none");
-}
+function switchTab(t){ tab=t; document.querySelectorAll(".tab").forEach(el=>el.classList.toggle("on",el.dataset.tab===t));
+  ["html","css","js"].forEach(k=>$("ed_"+k).style.display=k===t?"block":"none"); }
 
-// ── icon ────────────────────────────────────────────────────────────────────
-function onIcon(e){
-  const f=e.target.files[0]; if(!f) return;
-  if(f.size > 800*1024){ toast("الصورة كبيرة (>800KB) — استعمل صورة أصغر","err"); }
-  const r=new FileReader();
-  r.onload = ()=>{ iconData=r.result; showIcon(f.name); renderPreview(); };
-  r.readAsDataURL(f);
-}
-function showIcon(name){
-  $("iconThumb").src=iconData; $("iconThumb").style.display="block";
-  $("iconClear").style.display="inline-block";
-  $("iconInfo").textContent = name ? ("أُضيفت: "+name+" — استعملها بـ {{icon}}") : "أُضيفت — استعملها بـ {{icon}}";
-}
-function clearIcon(){ iconData=""; $("iconThumb").style.display="none"; $("iconClear").style.display="none";
-  $("iconInfo").textContent="لم تُضف أيقونة"; renderPreview(); }
+function onIcon(e){ const f=e.target.files[0]; if(!f) return;
+  if(f.size>800*1024) toast("الصورة كبيرة (>800KB) — استعمل أصغر","err");
+  const r=new FileReader(); r.onload=()=>{ iconData=r.result; showIcon(); renderPreview(); }; r.readAsDataURL(f); }
+function showIcon(){ $("iconThumb").src=iconData; $("iconThumb").style.display="inline-block"; $("iconClear").style.display="inline-block"; }
+function clearIcon(){ iconData=""; $("iconThumb").style.display="none"; $("iconClear").style.display="none"; renderPreview(); }
 
-// ── assemble ────────────────────────────────────────────────────────────────
-function injectIcon(s){ return s.split("{{icon}}").join(iconData || TRANSPARENT); }
-function assemble(withBridge){
+function injectIcon(s){ return s.split("{{icon}}").join(iconData||TRANSPARENT); }
+function assemble(bridge){
   const css=$("ed_css").value, html=$("ed_html").value, js=$("ed_js").value;
-  const bridge = withBridge
-    ? "<scr"+"ipt>window.BinAref={close:function(){parent.postMessage({t:'close'},'*')},open:function(u){parent.postMessage({t:'open',u:u},'*')}};</scr"+"ipt>"
-    : "";
-  const doc =
-`<!doctype html><html><head><meta charset="utf-8"><style>
+  const br = bridge ? "<scr"+"ipt>window.BinAref={close:function(){parent.postMessage({t:'close'},'*')},open:function(u){parent.postMessage({t:'open',u:u},'*')}};</scr"+"ipt>" : "";
+  return injectIcon(`<!doctype html><html><head><meta charset="utf-8"><style>
 ${css}
 </style></head><body>
 ${html}
-${bridge}<scr`+`ipt>
+${br}<scr`+`ipt>
 ${js}
-</scr`+`ipt></body></html>`;
-  return injectIcon(doc);
+</scr`+`ipt></body></html>`);
 }
-function parseMeta(){
-  const src = $("ed_css").value+"\n"+$("ed_html").value+"\n"+$("ed_js").value;
-  const m = src.match(/@card\s*(\d+)\s*[xX]\s*(\d+)(?:\s*\|\s*(\d+)\s*s)?/);
-  return { w: m?+m[1]:380, h: m?+m[2]:150, secs: (m&&m[3])?+m[3]:10 };
-}
+function parseMeta(){ const src=$("ed_css").value+"\n"+$("ed_html").value+"\n"+$("ed_js").value;
+  const m=src.match(/@card\s*(\d+)\s*[xX]\s*(\d+)(?:\s*\|\s*(\d+)\s*s)?/);
+  return { w:m?+m[1]:380, h:m?+m[2]:150, secs:(m&&m[3])?+m[3]:10 }; }
 
-// ── preview ─────────────────────────────────────────────────────────────────
-function renderPreview(){
-  const {w,h,secs}=parseMeta();
-  const f=$("preview"); f.style.width=w+"px"; f.style.height=h+"px"; f.srcdoc=assemble(true);
-  $("sizeLabel").textContent = `— ${w}×${h} · ${secs}s`;
-}
-window.addEventListener("message", e=>{
-  if(e.data&&e.data.t==="close") toast("BinAref.close() — سيُغلق الكرت في التطبيق");
-  if(e.data&&e.data.t==="open") toast("BinAref.open: "+e.data.u,"ok");
-});
+function renderPreview(){ const {w,h,secs}=parseMeta(); const f=$("preview");
+  f.style.width=w+"px"; f.style.height=h+"px"; f.srcdoc=assemble(true);
+  $("sizeLabel").textContent=`— ${w}×${h} · ${secs}s`; }
+window.addEventListener("message",e=>{ if(e.data&&e.data.t==="close") toast("BinAref.close() — سيُغلق في التطبيق");
+  if(e.data&&e.data.t==="open") toast("BinAref.open: "+e.data.u,"ok"); });
 
-// ── build + publish ─────────────────────────────────────────────────────────
 function platforms(){ return [...document.querySelectorAll("#platforms input:checked")].map(c=>c.value); }
-function buildRow(){
-  const id=$("f_id").value.trim();
+function buildRow(){ const id=$("f_id").value.trim();
   if(!id){ toast("أدخل المعرّف (id)","err"); return null; }
-  if(!$("ed_html").value.trim()){ toast("اكتب كود HTML للكرت","err"); return null; }
+  if(!$("ed_html").value.trim()){ toast("اكتب كود HTML","err"); return null; }
   const {w,h,secs}=parseMeta();
-  return {
-    id, html: assemble(false), width:w, height:h, show_seconds:secs,
-    dismissible:$("f_dismiss").checked, active:$("f_active").checked,
-    platforms:platforms(),
-    source:{ html:$("ed_html").value, css:$("ed_css").value, js:$("ed_js").value, icon:iconData }
-  };
-}
-async function publish(){
-  if(!cfg.key){ toast("احفظ مفتاح service_role أولاً","err"); toggleSettings(); return; }
+  return { id, html:assemble(false), width:w, height:h, show_seconds:secs,
+    dismissible:$("f_dismiss").checked, active:$("f_active").checked, platforms:platforms(),
+    source:{html:$("ed_html").value,css:$("ed_css").value,js:$("ed_js").value,icon:iconData} }; }
+async function publish(){ if(!cfg.key){ toast("احفظ مفتاح service_role أولاً","err"); togglePop(); return; }
   const row=buildRow(); if(!row) return;
-  try{
-    const r=await fetch(`${cfg.url}/rest/v1/${TABLE}`,{method:"POST",headers:headers(true),body:JSON.stringify([row])});
-    if(!r.ok) throw new Error(await r.text());
-    toast("✅ نُشر الكرت «"+row.id+"»","ok"); fetchCards();
-  }catch(e){ toast("فشل النشر: "+trim(e.message),"err"); }
-}
-function copyJson(){ const row=buildRow(); if(!row) return;
-  navigator.clipboard.writeText(JSON.stringify(row,null,2)); toast("نُسخ JSON","ok"); }
+  try{ const r=await fetch(`${cfg.url}/rest/v1/${TABLE}`,{method:"POST",headers:headers(true),body:JSON.stringify([row])});
+    if(!r.ok) throw new Error(await r.text()); toast("✅ نُشر «"+row.id+"»","ok"); fetchCards();
+  }catch(e){ toast("فشل النشر: "+trim(e.message),"err"); } }
 
-// ── existing cards ──────────────────────────────────────────────────────────
-async function fetchCards(){
-  if(!cfg.key) return;
-  try{
-    const r=await fetch(`${cfg.url}/rest/v1/${TABLE}?select=*&order=created_at.desc`,{headers:headers(false)});
+async function fetchCards(){ if(!cfg.key) return;
+  try{ const r=await fetch(`${cfg.url}/rest/v1/${TABLE}?select=*&order=created_at.desc`,{headers:headers(false)});
     if(!r.ok) throw new Error(await r.text()); renderCards(await r.json());
-  }catch(e){ toast("تعذّر جلب الكروت: "+trim(e.message),"err"); }
-}
-function renderCards(rows){
-  const b=$("cardsBody");
-  if(!rows.length){ b.innerHTML=`<tr><td colspan="4" class="muted">لا توجد كروت بعد</td></tr>`; return; }
-  b.innerHTML=rows.map(c=>`<tr>
-    <td>${esc(c.id)}</td>
-    <td><span class="badge2 ${c.active?'on':'off'}">${c.active?'نشِط':'موقوف'}</span></td>
-    <td class="muted">${c.width}×${c.height}</td>
-    <td style="text-align:end;white-space:nowrap">
-      <button class="btn sm ghost" onclick='loadCard(${JSON.stringify(c).replace(/'/g,"&#39;")})'>تحميل</button>
-      <button class="btn sm" onclick="toggleActive('${esc(c.id)}',${!c.active})">${c.active?'إيقاف':'تشغيل'}</button>
-      <button class="btn sm danger" onclick="del('${esc(c.id)}')">حذف</button>
-    </td></tr>`).join("");
-}
-function loadCard(c){
-  $("f_id").value=c.id;
-  const s=c.source;
-  if(s){ $("ed_html").value=s.html||""; $("ed_css").value=s.css||""; $("ed_js").value=s.js||"";
-    iconData=s.icon||""; if(iconData) showIcon(""); else clearIcon(); }
-  else { $("ed_html").value=c.html||""; $("ed_css").value=""; $("ed_js").value=""; clearIcon();
-    toast("كرت قديم بلا مصدر منفصل — وُضع في تبويب HTML"); }
-  $("f_dismiss").checked=!!c.dismissible; $("f_active").checked=!!c.active;
-  document.querySelectorAll("#platforms input").forEach(i=>i.checked=(c.platforms||[]).includes(i.value));
-  syncChips(); switchTab("html"); renderPreview(); window.scrollTo({top:0,behavior:"smooth"});
-}
-async function toggleActive(id,active){
-  try{ const r=await fetch(`${cfg.url}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(id)}`,
-    {method:"PATCH",headers:headers(true),body:JSON.stringify({active})});
-    if(!r.ok) throw new Error(await r.text()); toast(active?"شُغّل":"أُوقف","ok"); fetchCards();
-  }catch(e){ toast("فشل: "+trim(e.message),"err"); }
-}
-async function del(id){
-  if(!confirm("حذف الكرت «"+id+"» نهائياً؟")) return;
-  try{ const r=await fetch(`${cfg.url}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(id)}`,
-    {method:"DELETE",headers:headers(false)});
-    if(!r.ok) throw new Error(await r.text()); toast("حُذف","ok"); fetchCards();
-  }catch(e){ toast("فشل الحذف: "+trim(e.message),"err"); }
-}
+  }catch(e){ toast("تعذّر جلب الكروت: "+trim(e.message),"err"); } }
+function renderCards(rows){ cardsCache=rows; $("ddCount").textContent="("+rows.length+")";
+  const l=$("ddList");
+  if(!rows.length){ l.innerHTML=`<div class="ddEmpty">لا توجد كروت بعد</div>`; return; }
+  l.innerHTML=rows.map((c,i)=>`<div class="ddRow">
+      <div class="ddMain" onclick="loadIdx(${i})" title="نسخ بياناته إلى المحرّر">
+        <span class="ddId">${esc(c.id)}</span>
+        <span class="badge2 ${c.active?'on':'off'}">${c.active?'نشِط':'موقوف'}</span>
+        <span class="muted">${c.width}×${c.height}</span>
+      </div>
+      <button class="btn sm" onclick="toggleIdx(${i})">${c.active?'إيقاف':'تشغيل'}</button>
+      <button class="btn sm danger" onclick="delIdx(${i})">حذف</button>
+    </div>`).join(""); }
 
-// ── helpers ─────────────────────────────────────────────────────────────────
-function clearForm(){
-  $("f_id").value=""; $("ed_html").value=START.html; $("ed_css").value=START.css; $("ed_js").value=START.js;
+function loadIdx(i){ const c=cardsCache[i]; if(!c) return; const s=c.source;
+  $("f_id").value=c.id;
+  if(s){ $("ed_html").value=s.html||""; $("ed_css").value=s.css||""; $("ed_js").value=s.js||"";
+    iconData=s.icon||""; iconData?showIcon():clearIcon(); }
+  else { $("ed_html").value=c.html||""; $("ed_css").value=""; $("ed_js").value=""; clearIcon();
+    toast("كرت قديم — وُضع في تبويب HTML"); }
+  $("f_dismiss").checked=!!c.dismissible; $("f_active").checked=!!c.active;
+  document.querySelectorAll("#platforms input").forEach(x=>x.checked=(c.platforms||[]).includes(x.value));
+  syncChips(); switchTab("html"); renderPreview(); toggleDD(true); toast("نُسخت بيانات «"+c.id+"» — عدّلها ثم انشر","ok"); }
+async function toggleIdx(i){ const c=cardsCache[i]; if(!c) return;
+  try{ const r=await fetch(`${cfg.url}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(c.id)}`,
+    {method:"PATCH",headers:headers(true),body:JSON.stringify({active:!c.active})});
+    if(!r.ok) throw new Error(await r.text()); toast(!c.active?"شُغّل":"أُوقف","ok"); fetchCards();
+  }catch(e){ toast("فشل: "+trim(e.message),"err"); } }
+async function delIdx(i){ const c=cardsCache[i]; if(!c) return; if(!confirm("حذف الكرت «"+c.id+"» نهائياً؟")) return;
+  try{ const r=await fetch(`${cfg.url}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(c.id)}`,{method:"DELETE",headers:headers(false)});
+    if(!r.ok) throw new Error(await r.text()); toast("حُذف","ok"); fetchCards();
+  }catch(e){ toast("فشل الحذف: "+trim(e.message),"err"); } }
+
+function clearForm(){ $("f_id").value=""; $("ed_html").value=START.html; $("ed_css").value=START.css; $("ed_js").value=START.js;
   clearIcon(); $("f_dismiss").checked=true; $("f_active").checked=true;
-  document.querySelectorAll("#platforms input").forEach(i=>i.checked=false);
-  syncChips(); switchTab("html"); renderPreview();
-}
+  document.querySelectorAll("#platforms input").forEach(i=>i.checked=false); syncChips(); switchTab("html"); renderPreview(); }
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function trim(s){ return String(s).slice(0,180); }
-let toastT;
-function toast(msg,kind){ const t=$("toast"); t.textContent=msg; t.className="toast show "+(kind||"");
+let toastT; function toast(msg,kind){ const t=$("toast"); t.textContent=msg; t.className="toast show "+(kind||"");
   clearTimeout(toastT); toastT=setTimeout(()=>t.className="toast",3200); }
-function syncChips(){ document.querySelectorAll("#platforms .chip").forEach(ch=>{
-  const i=ch.querySelector("input"); ch.classList.toggle("on", i&&i.checked); }); }
+function syncChips(){ document.querySelectorAll("#platforms .chip").forEach(ch=>{ const i=ch.querySelector("input"); ch.classList.toggle("on",i&&i.checked); }); }
 
 document.querySelectorAll("#platforms .chip input").forEach(i=>i.addEventListener("change",syncChips));
-["ed_html","ed_css","ed_js"].forEach(id=>$(id).addEventListener("input",()=>{
-  clearTimeout(window._pv); window._pv=setTimeout(renderPreview,400); }));
+["ed_html","ed_css","ed_js"].forEach(id=>$(id).addEventListener("input",()=>{ clearTimeout(window._pv); window._pv=setTimeout(renderPreview,350); }));
+// close popups on outside click
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".dd")) toggleDD(true);
+  if(!e.target.closest("header > div:last-child")) $("settings").style.display="none";
+});
 
-// init
 loadConfig();
 $("ed_html").value=START.html; $("ed_css").value=START.css; $("ed_js").value=START.js;
 syncChips(); renderPreview(); if(cfg.key) fetchCards();
