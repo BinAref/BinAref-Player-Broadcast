@@ -117,7 +117,10 @@
   <div class="main">
     <!-- Editor -->
     <div class="col scroll">
-      <label>المعرّف (id) — فريد. تغييره = كرت جديد لكل الأجهزة</label>
+      <label>قوالب جاهزة — اختر قالباً ثم عدّله</label>
+      <div class="chips" id="templates"></div>
+
+      <label style="margin-top:12px">المعرّف (id) — فريد. تغييره = كرت جديد لكل الأجهزة</label>
       <input id="f_id" placeholder="مثال: update-1-3-3">
 
       <label>العنوان</label>
@@ -183,6 +186,39 @@ const DEFAULT_URL="https://ijgqmjgllwtcjziyrgvc.supabase.co";
 const TABLE="broadcasts";
 const $=id=>document.getElementById(id);
 let cfg={url:"",key:""}, iconData="", buttons=[], cardsCache=[];
+
+// Ready-made templates — one click fills the fields, then edit as you like.
+const TEMPLATES=[
+  {name:"🎉 تحديث جديد", id:"update", title:"تحديث جديد متوفّر 🎉",
+   body:"إصدار جديد بمزايا وإصلاحات. حمّله الآن.",
+   buttons:[{label:"حمّل التحديث",url:"https://github.com/BinAref/BinAref-Releases/releases/latest"}], secs:12, gap:2},
+  {name:"📣 إعلان", id:"announce", title:"إعلان",
+   body:"اكتب نص إعلانك هنا…", buttons:[], secs:10, gap:2},
+  {name:"🔥 عرض", id:"promo", title:"عرض خاص 🔥",
+   body:"عرض لفترة محدودة — لا تفوّته!",
+   buttons:[{label:"اطّلع الآن",url:""}], secs:12, gap:2},
+  {name:"🔔 تنبيه", id:"notice", title:"",
+   body:"نص التنبيه هنا…", buttons:[], secs:8, gap:2},
+  {name:"👋 ترحيب", id:"welcome", title:"أهلاً بك في BinAref Player 👋",
+   body:"استمتع بأفضل تجربة مشاهدة.", buttons:[{label:"ابدأ",url:""}], secs:10, gap:2},
+  {name:"⭐ قيّمنا", id:"rate", title:"رأيك يهمّنا ⭐",
+   body:"قيّم التطبيق وساعدنا على التحسين.",
+   buttons:[{label:"قيّم الآن",url:""}], secs:10, gap:2},
+  {name:"🛠️ صيانة", id:"maintenance", title:"إشعار صيانة 🛠️",
+   body:"قد تحدث انقطاعات مؤقتة. نعتذر عن الإزعاج.", buttons:[], secs:12, gap:2},
+];
+function renderTemplates(){
+  $("templates").innerHTML=TEMPLATES.map((t,i)=>
+    `<span class="chip" style="cursor:pointer" onclick="applyTemplate(${i})">${t.name}</span>`).join("");
+}
+function applyTemplate(i){
+  const t=TEMPLATES[i];
+  if(!$("f_id").value.trim()) $("f_id").value=t.id+"-"+new Date().toISOString().slice(0,10);
+  $("f_title").value=t.title; $("f_body").value=t.body;
+  buttons=(t.buttons||[]).map(b=>({label:b.label,url:b.url}));
+  $("f_secs").value=t.secs; $("f_gap").value=t.gap;
+  renderBtns(); renderPreview(); toast("طُبّق قالب: "+t.name.replace(/^\S+\s/,""),"ok");
+}
 
 function loadConfig(){ cfg.url=localStorage.getItem("sb_url")||DEFAULT_URL; cfg.key=localStorage.getItem("sb_key")||"";
   $("sbUrl").value=cfg.url; $("sbKey").value=cfg.key; updateConn(); }
@@ -294,6 +330,7 @@ document.addEventListener("click",e=>{ if(!e.target.closest(".dd")) toggleDD(tru
   if(!e.target.closest("header > div:last-child")) $("settings").style.display="none"; });
 
 loadConfig();
+renderTemplates();
 addBtn("حمّل الآن","https://github.com/BinAref/BinAref-Releases");
 $("f_title").value="عنوان الإعلان"; $("f_body").value="نص قصير هنا…";
 syncChips(); renderPreview(); if(cfg.key) fetchCards();
