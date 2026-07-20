@@ -191,7 +191,7 @@ let cfg={url:"",key:""}, iconData="", buttons=[], cardsCache=[];
 const TEMPLATES=[
   {name:"🎉 تحديث جديد", id:"update", title:"تحديث جديد متوفّر 🎉",
    body:"إصدار جديد بمزايا وإصلاحات. حمّله الآن.",
-   buttons:[{label:"حمّل التحديث",url:"https://github.com/BinAref/BinAref-Releases/releases/latest"}], secs:12, gap:2},
+   buttons:[{label:"حمّل التحديث",url:"https://github.com/BinAref/BinAref-Player-Releases/releases/latest"}], secs:12, gap:2},
   {name:"📣 إعلان", id:"announce", title:"إعلان",
    body:"اكتب نص إعلانك هنا…", buttons:[], secs:10, gap:2},
   {name:"🔥 عرض", id:"promo", title:"عرض خاص 🔥",
@@ -331,7 +331,7 @@ document.addEventListener("click",e=>{ if(!e.target.closest(".dd")) toggleDD(tru
 
 loadConfig();
 renderTemplates();
-addBtn("حمّل الآن","https://github.com/BinAref/BinAref-Releases");
+addBtn("حمّل الآن","https://github.com/BinAref/BinAref-Player-Releases/releases/latest");
 $("f_title").value="عنوان الإعلان"; $("f_body").value="نص قصير هنا…";
 syncChips(); renderPreview(); if(cfg.key) fetchCards();
 </script>
