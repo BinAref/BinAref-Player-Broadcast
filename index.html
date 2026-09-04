@@ -154,7 +154,9 @@
         <div class="sep"></div>
         <div><label style="margin:0 0 3px">إغلاق تلقائي (ث)</label><input id="f_secs" class="num" type="number" value="10"></div>
         <div><label style="margin:0 0 3px">فاصل بين الكروت (ث)</label><input id="f_gap" class="num" type="number" value="2"></div>
+        <div><label style="margin:0 0 3px">أقصى إصدار (اختياري)</label><input id="f_maxver" class="num" type="text" placeholder="1.3.6"></div>
       </div>
+      <div class="muted" style="font-size:11px;margin-top:6px">أقصى إصدار = لا تظهر البطاقة إلا لمن إصداره أقل منه أو يساويه — ضع هنا الإصدار القديم في كروت التحديث حتى لا تصل من حدّث فعلاً.</div>
       <div class="muted" style="font-size:11px;margin-top:6px">الفاصل = بعد إغلاق كرت، كم ينتظر قبل ظهور الكرت التالي (عند إرسال عدة كروت).</div>
 
       <div class="actions">
@@ -185,13 +187,22 @@
 const DEFAULT_URL="https://ijgqmjgllwtcjziyrgvc.supabase.co";
 const TABLE="broadcasts";
 const $=id=>document.getElementById(id);
+// Direct download of whichever release is currently marked Latest, so an
+// update card never needs its links bumped.
+const DL="https://github.com/BinAref/BinAref-Player-Releases/releases/latest/download/";
+
 let cfg={url:"",key:""}, iconData="", buttons=[], cardsCache=[];
 
 // Ready-made templates — one click fills the fields, then edit as you like.
 const TEMPLATES=[
-  {name:"🎉 تحديث جديد", id:"update", title:"تحديث جديد متوفّر 🎉",
-   body:"إصدار جديد بمزايا وإصلاحات. حمّله الآن.",
-   buttons:[{label:"حمّل التحديث",url:"https://github.com/BinAref/BinAref-Player-Releases/releases/latest"}], secs:12, gap:2},
+  {name:"🎉 تحديث (ويندوز)", id:"update-win", title:"تحديث جديد متوفّر 🎉",
+   body:"إصدار جديد بمزايا وإصلاحات. اضغط لتحميله مباشرة.",
+   buttons:[{label:"⬇️ تحديث الآن",url:DL+"BinAref-Player-Setup.exe"}],
+   platforms:["windows"], secs:14, gap:2},
+  {name:"🎉 تحديث (أندرويد)", id:"update-android", title:"تحديث جديد متوفّر 🎉",
+   body:"إصدار جديد بمزايا وإصلاحات. اضغط لتحميله مباشرة.",
+   buttons:[{label:"⬇️ تحديث الآن",url:DL+"BinAref-Player-Android.apk"}],
+   platforms:["android"], secs:14, gap:2},
   {name:"📣 إعلان", id:"announce", title:"إعلان",
    body:"اكتب نص إعلانك هنا…", buttons:[], secs:10, gap:2},
   {name:"🔥 عرض", id:"promo", title:"عرض خاص 🔥",
@@ -217,7 +228,9 @@ function applyTemplate(i){
   $("f_title").value=t.title; $("f_body").value=t.body;
   buttons=(t.buttons||[]).map(b=>({label:b.label,url:b.url}));
   $("f_secs").value=t.secs; $("f_gap").value=t.gap;
-  renderBtns(); renderPreview(); toast("طُبّق قالب: "+t.name.replace(/^\S+\s/,""),"ok");
+  $("f_maxver").value=t.maxVersion||"";
+  document.querySelectorAll("#platforms input").forEach(x=>x.checked=(t.platforms||[]).includes(x.value));
+  syncChips(); renderBtns(); renderPreview(); toast("طُبّق قالب: "+t.name.replace(/^\S+\s/,""),"ok");
 }
 
 function loadConfig(){ cfg.url=localStorage.getItem("sb_url")||DEFAULT_URL; cfg.key=localStorage.getItem("sb_key")||"";
@@ -278,7 +291,8 @@ function buildRow(){
   if(!t&&!b&&!iconData&&!btns.length){ toast("أضف عنواناً أو نصاً على الأقل","err"); return null; }
   return { id, title:t||null, body:b||null, icon:iconData||null, buttons:btns,
     show_seconds:+$("f_secs").value||10, gap_seconds:+$("f_gap").value||2,
-    dismissible:$("f_dismiss").checked, platforms:platforms(), active:true };
+    dismissible:$("f_dismiss").checked, platforms:platforms(),
+    max_version:$("f_maxver").value.trim()||null, active:true };
 }
 async function publish(){ if(!cfg.key){ toast("احفظ مفتاح service_role أولاً","err"); togglePop(); return; }
   const row=buildRow(); if(!row) return;
@@ -305,6 +319,7 @@ function loadIdx(i){ const c=cardsCache[i]; if(!c) return;
   iconData=c.icon||""; if(iconData){ $("iconThumb").src=iconData; $("iconThumb").style.display="inline-block"; $("iconClear").style.display="inline-block"; } else clearIcon();
   buttons=Array.isArray(c.buttons)?c.buttons.map(b=>({label:b.label||"",url:b.url||""})):[];
   $("f_secs").value=c.show_seconds??10; $("f_gap").value=c.gap_seconds??2; $("f_dismiss").checked=c.dismissible!==false;
+  $("f_maxver").value=c.max_version||"";
   document.querySelectorAll("#platforms input").forEach(x=>x.checked=(c.platforms||[]).includes(x.value));
   syncChips(); renderBtns(); renderPreview(); toggleDD(true); toast("نُسخت بيانات «"+c.id+"»","ok"); }
 async function toggleIdx(i){ const c=cardsCache[i]; if(!c) return;
@@ -318,7 +333,7 @@ async function delIdx(i){ const c=cardsCache[i]; if(!c) return; if(!confirm("ح�
   }catch(e){ toast("فشل الحذف: "+trim(e.message),"err"); } }
 
 function clearForm(){ $("f_id").value=""; $("f_title").value=""; $("f_body").value=""; clearIcon();
-  buttons=[]; $("f_secs").value=10; $("f_gap").value=2; $("f_dismiss").checked=true;
+  buttons=[]; $("f_secs").value=10; $("f_gap").value=2; $("f_dismiss").checked=true; $("f_maxver").value="";
   document.querySelectorAll("#platforms input").forEach(i=>i.checked=false); syncChips(); renderBtns(); renderPreview(); }
 function syncChips(){ document.querySelectorAll("#platforms .chip").forEach(ch=>{ const i=ch.querySelector("input"); ch.classList.toggle("on",i&&i.checked); }); }
 function trim(s){ return String(s).slice(0,180); }

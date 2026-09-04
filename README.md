@@ -32,6 +32,14 @@ Fill the fields (live preview on the right updates as you type):
 - **Buttons** — add as many as you like; each has a label and a link (opens in
   the browser when tapped).
 - **Platforms** — who sees it (empty = everyone).
+- **أقصى إصدار** (`max_version`, optional) — only users on this version *or older*
+  see the card. Set it to the version you are superseding on an update card, so
+  it stops reaching people who already updated.
+
+The two 🎉 **تحديث** templates are ready to send: each carries a direct-download
+button (`releases/latest/download/…`, so the link never needs bumping) and
+preselects its platform — Windows gets the installer, Android gets the APK.
+Send both to cover everyone.
 - **قابل للإغلاق** — show the ✕ close button.
 - **إغلاق تلقائي (ث)** — seconds the card stays before auto-hiding.
 - **فاصل بين الكروت (ث)** — if several cards are sent (or a batch arrives after
