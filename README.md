@@ -1,7 +1,9 @@
 # BinAref Player — Broadcast panel
 
 A private admin panel to compose and publish **broadcast cards** for BinAref
-Player. Cards are stored in Supabase (`broadcasts` table); the app reads them
+Player. Cards are published to `announcements.json` in the public
+[BinAref-Player-Releases](https://github.com/BinAref/BinAref-Player-Releases)
+repo; the app reads them
 and shows each card at the top of the screen while a video plays, and keeps it
 in the notifications (bell) section.
 
@@ -45,7 +47,9 @@ Send both to cover everyone.
 - **فاصل بين الكروت (ث)** — if several cards are sent (or a batch arrives after
   reconnecting), how long to wait after one closes before the next appears.
 
-Click **🚀 نشر / إرسال**. It's live immediately — viewers watching a video get it
+Click **⬇️ نسخ JSON**, then paste the entry into the `announcements` array in
+[`announcements.json`](https://github.com/BinAref/BinAref-Player-Releases/edit/main/announcements.json)
+and commit. It's live immediately — viewers watching a video get it
 within seconds; offline viewers get it the next time they're online and open a
 video. A card shows once per device; re-broadcast by publishing with a new id.
 
@@ -58,3 +62,16 @@ the form, toggle it on/off (`active`), or delete it.
 file — only in your browser's localStorage. **Never commit it, and don't enter
 it while this page is served publicly.** Use the panel locally. The app itself
 never uses this key (it reads with the public read-only anon key).
+
+
+## Why not Supabase any more
+
+The cards used to live in a Supabase table. It sat on the free tier, which
+**pauses a project after a week of inactivity** — and the moment that happened
+its host stopped resolving, so broadcasts were silently dead for every user with
+nothing in the app to say so. A static file in a public repo has no such failure
+mode, costs nothing, and needs no key.
+
+The Supabase path is still in the panel (collapsed, under the JSON button) and
+still works if the project is running, but it only reaches **1.3.7 and older** —
+those are the builds that poll the table. 1.3.8+ read the file.

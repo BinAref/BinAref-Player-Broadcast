@@ -160,9 +160,24 @@
       <div class="muted" style="font-size:11px;margin-top:6px">الفاصل = بعد إغلاق كرت، كم ينتظر قبل ظهور الكرت التالي (عند إرسال عدة كروت).</div>
 
       <div class="actions">
-        <button class="btn primary" style="flex:1" onclick="publish()">🚀 نشر / إرسال</button>
+        <button class="btn primary" style="flex:1" onclick="copyJson()">⬇️ نسخ JSON</button>
         <button class="btn ghost sm" onclick="clearForm()">جديد</button>
       </div>
+      <div class="muted" style="font-size:11px;margin-top:8px;line-height:1.7">
+        النشر الآن عبر <b>GitHub</b> وليس قاعدة بيانات: انسخ الـJSON وأضفه إلى مصفوفة
+        <code>announcements</code> في
+        <a href="https://github.com/BinAref/BinAref-Player-Releases/edit/main/announcements.json"
+           target="_blank" rel="noopener">announcements.json</a>
+        ثم commit. تصل البطاقة خلال دقائق (ذاكرة raw مؤقتة ~5 د).
+      </div>
+      <details style="margin-top:10px">
+        <summary class="muted" style="font-size:11px;cursor:pointer">النشر عبر Supabase (الطريقة القديمة)</summary>
+        <div class="muted" style="font-size:11px;margin:8px 0;line-height:1.7">
+          يصل فقط إلى إصدار <b>1.3.7 وما قبله</b> (الإصدارات الأحدث تقرأ ملف GitHub).
+          يتطلّب مشروع Supabase مُفعّلاً — وهو يُوقَف تلقائياً بعد أسبوع خمول.
+        </div>
+        <button class="btn ghost sm" onclick="publish()">🚀 نشر إلى Supabase</button>
+      </details>
     </div>
 
     <!-- Preview + cards -->
@@ -296,6 +311,28 @@ function buildRow(){
   // existing unless someone fills the field in.
   const mv=$("f_maxver").value.trim(); if(mv) row.max_version=mv;
   return row;
+}
+// Export the composed card as a feed entry to paste into announcements.json.
+// Same fields as buildRow, in the camelCase the file uses, with empties dropped
+// so a card stays as short as what it actually sets.
+function feedEntry(){
+  const r=buildRow(); if(!r) return null;
+  const e={id:r.id};
+  if(r.title) e.title=r.title;
+  if(r.body) e.body=r.body;
+  if(r.icon) e.icon=r.icon;
+  if(r.buttons&&r.buttons.length) e.buttons=r.buttons;
+  if(r.platforms&&r.platforms.length) e.platforms=r.platforms;
+  if(r.max_version) e.maxVersion=r.max_version;
+  e.showSeconds=r.show_seconds; e.gapSeconds=r.gap_seconds;
+  if(!r.dismissible) e.dismissible=false;
+  return e;
+}
+async function copyJson(){
+  const e=feedEntry(); if(!e) return;
+  const txt=JSON.stringify(e,null,2);
+  try{ await navigator.clipboard.writeText(txt); toast("✅ نُسخ الـJSON — ألصقه في announcements.json","ok"); }
+  catch(_){ prompt("انسخ هذا إلى announcements.json:", txt); }
 }
 async function publish(){ if(!cfg.key){ toast("احفظ مفتاح service_role أولاً","err"); togglePop(); return; }
   const row=buildRow(); if(!row) return;
