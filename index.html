@@ -289,10 +289,13 @@ function buildRow(){
   const t=$("f_title").value.trim(), b=$("f_body").value.trim();
   const btns=buttons.map(x=>({label:x.label.trim(),url:x.url.trim()})).filter(x=>x.label);
   if(!t&&!b&&!iconData&&!btns.length){ toast("أضف عنواناً أو نصاً على الأقل","err"); return null; }
-  return { id, title:t||null, body:b||null, icon:iconData||null, buttons:btns,
+  const row={ id, title:t||null, body:b||null, icon:iconData||null, buttons:btns,
     show_seconds:+$("f_secs").value||10, gap_seconds:+$("f_gap").value||2,
-    dismissible:$("f_dismiss").checked, platforms:platforms(),
-    max_version:$("f_maxver").value.trim()||null, active:true };
+    dismissible:$("f_dismiss").checked, platforms:platforms(), active:true };
+  // Only sent when actually used, so the insert never depends on the column
+  // existing unless someone fills the field in.
+  const mv=$("f_maxver").value.trim(); if(mv) row.max_version=mv;
+  return row;
 }
 async function publish(){ if(!cfg.key){ toast("احفظ مفتاح service_role أولاً","err"); togglePop(); return; }
   const row=buildRow(); if(!row) return;
